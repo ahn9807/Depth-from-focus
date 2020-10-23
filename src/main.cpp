@@ -15,6 +15,8 @@
 #define IMG_SIZE 30
 #define MAX_ITER 10
 #define SMOOTH_CONST 1
+#define IMG_WRITE_PATH "/Users/admin/Desktop/Result/"
+#define IMG_READ_PATH "/Users/admin/Desktop/cotton/"
 
 
 using namespace std;
@@ -25,6 +27,8 @@ void align_images(Mat* imgStack, Mat* resultStack);
 void calculate_costvolume(Mat* imgStack, Mat* costVolume);
 void all_in_focus(Mat* img_stack, Mat &depth_map, Mat &result_map);
 void image_refinement(const Mat* costVolume, Mat &result_img);
+void show_colorized_image(Mat source, string name);
+void save_image(Mat source, string name);
 
 int main() {
     Mat img_stack_original[IMG_SIZE];
@@ -34,12 +38,13 @@ int main() {
     Mat depthImg;
     Mat depthImg_refined;
     
-    img_read("/Users/admin/Desktop/depth from focus/boxes/", img_stack_original);
+    img_read(IMG_READ_PATH, img_stack_original);
     align_images(img_stack_original, img_stack_aligned);
     calculate_costvolume(img_stack_aligned, costVolume);
     image_refinement(costVolume, depthImg_refined);
     all_in_focus(img_stack_aligned, depthImg_refined, resultImg);
     imshow("result", resultImg);
+    save_image(resultImg, "result");
     
     waitKey(0);
     
@@ -106,10 +111,7 @@ void image_refinement(const Mat* costVolume, Mat &result_img) {
         
         ximgproc::weightedMedianFilter(result_img,result_img,result_img, 2);
         
-        Mat colorMap;
-        normalize(result_img, colorMap, 0, 255, NORM_MINMAX);
-        applyColorMap(colorMap, colorMap, COLORMAP_RAINBOW);
-        imshow("refined depth", colorMap);
+        show_colorized_image(result_img, "after refinement");
         
         delete gc;
     }
@@ -137,6 +139,9 @@ void calculate_costvolume(Mat* imgStack, Mat* costVolume) {
         convertScaleAbs(costVolume[i], costVolume[i]);
     }
     
+    save_image(costVolume[0], "cost volume 1");
+    save_image(costVolume[29], "cost volume 30");
+    //for debug perpose only to generate initial depth map
     Mat depthMap = Mat(imgStack[0].size().width, imgStack[0].size().height, CV_8UC1);
     
     for(int x = 0; x < imgStack[0].size().width; x++) {
@@ -155,10 +160,7 @@ void calculate_costvolume(Mat* imgStack, Mat* costVolume) {
     }
     
     //for debug purpose only
-    Mat colorMap;
-    normalize(depthMap, colorMap, 0, 255, NORM_MINMAX);
-    applyColorMap(colorMap, colorMap, COLORMAP_RAINBOW);
-    imshow("initial_depth_map", colorMap);
+    show_colorized_image(depthMap, "initial depth map");
     
     cout << "done!" << endl;
 }
@@ -206,6 +208,21 @@ void align_images(Mat* imgStack, Mat* resultStack) {
         warpPerspective(imgStack[i], resultStack[i], lastHomography, imgStack[0].size());
     }
     
+    show_colorized_image(imgStack[0] - imgStack[29], "before alignment");
+    show_colorized_image(imgStack[0] - resultStack[29], "after alignment");
+    
     cout << "done!" << endl;
+}
+
+void show_colorized_image(Mat source, string name) {
+    Mat colorMap;
+    normalize(source, colorMap, 0, 255, NORM_MINMAX);
+    applyColorMap(colorMap, colorMap, COLORMAP_RAINBOW);
+    imshow(name, colorMap);
+    save_image(colorMap, name);
+}
+
+void save_image(Mat source, string name) {
+    imwrite(IMG_WRITE_PATH + name + ".png", source);
 }
 
