@@ -23,7 +23,7 @@ For aligning images, you have to consider using various kinds of align methods. 
 
 |before alignment|after alignment|
 |:---:|:---|
-|![ba](../depth%20from%20focus/result/before%20alignment.png)   | ![aa](../depth%20from%20focus/result/after%20alignment.png)   |
+|![ba](https://raw.githubusercontent.com/ahn9807/Depth-from-focus/master/result/before%20alignment.png)   | ![aa](https://raw.githubusercontent.com/ahn9807/Depth-from-focus/master/result/after%20alignment.png)   |
 
 You can find the difference of image 1 and image 30 in above table. You can find that after the refinement the differences of image is reduced.
 
@@ -40,7 +40,7 @@ In this project, I use Laplacian as a focus Measure Method.
 
 |Depth map of image 1|Depth map of image 30|
 |:---:|:---|
-|![dm1](../depth%20from%20focus/result/cost%20volume%201.png)   | ![dm2](../depth%20from%20focus/result/cost%20volume%2030.png)   |
+|![dm1](https://raw.githubusercontent.com/ahn9807/Depth-from-focus/master/result/cost%20volume%201.png)   | ![dm2](https://raw.githubusercontent.com/ahn9807/Depth-from-focus/master/result/cost%20volume%2030.png)   |
 
 ### Calculating Cost Volume
 Now calculating depth map of each images and assemble them. Then we can make cost volume. Cost volume is a terminology for "Celected data set of diaparity map" in computer vision [4]. By selecting the label of image at the highest value in the each cost volume pixels, we can get the initial depth map. But, this naive approach for calculating initial depth map has lots of noise at the depth map. So we have to reduce this noise by using graph cut and weighted median filter.
@@ -53,12 +53,12 @@ Weighted Median (WM) filters have the robustness and edge preserving capability 
 
 |Initial depth map|Using graph cut and weighted meidan filter|
 |:---:|:---|
-|![idm](../result/../depth%20from%20focus/result/initial%20depth%20map.png)   | ![refined image](../result/../depth%20from%20focus/result/after%20refinement.png)   |
+|![idm](https://raw.githubusercontent.com/ahn9807/Depth-from-focus/master/result/initial%20depth%20map.png)   | ![refined image](https://raw.githubusercontent.com/ahn9807/Depth-from-focus/master/result/after%20refinement.png)   |
 
 ## All in Focus
 Finally, by selecting the pixel at the i'th decoused image at the depth map, we can construct final all in focus image. 
 
-![result](../result/../depth%20from%20focus/result/result.png)
+![result](https://raw.githubusercontent.com/ahn9807/Depth-from-focus/master/result/result.png)
 
 ## References
 1. https://homepages.inf.ed.ac.uk/rbf/CVonline/LOCAL_COPIES/FAVARO1/dfdtutorial.html
